@@ -53,6 +53,11 @@
 #include "FutharkStream.h"
 #endif
 
+#ifdef ENABLE_CALIPER
+#include <caliper/cali.h>
+#include <adiak.h>
+#endif
+
 // Default size of 2^25
 int ARRAY_SIZE = 33554432;
 unsigned int num_times = 100;
@@ -82,6 +87,19 @@ void parseArguments(int argc, char *argv[]);
 int main(int argc, char *argv[])
 {
 
+  #ifdef STREAM_ENABLE_CALIPER
+	cali_config_set("CALI_CALIPER_ATTRIBUTE_DEFAULT_SCOPE", "process");
+
+	adiak_init(NULL);
+	adiak_collect_all();
+
+	adiak_namevalue("BABELSTREAM version", adiak_general, NULL, "%s", "4.0");
+	adiak_namevalue("num_times", adiak_general, NULL, "%d", num_times);
+	adiak_namevalue("elements", adiak_general, NULL, "%llu", ARRAY_SIZE);
+
+	CALI_MARK_FUNCTION_BEGIN;
+#endif  
+
   parseArguments(argc, argv);
 
   if (!output_as_csv)
@@ -110,15 +128,28 @@ std::vector<std::vector<double>> run_all(Stream<T> *stream, T& sum)
 
   // Declare timers
   std::chrono::high_resolution_clock::time_point t1, t2;
+#ifdef STREAM_ENABLE_CALIPER
+	CALI_MARK_LOOP_BEGIN(mainloop, "mainloop");
+#endif
 
   // Main loop
   for (unsigned int k = 0; k < num_times; k++)
   {
+#ifdef STREAM_ENABLE_CALIPER
+	CALI_MARK_ITERATION_BEGIN(mainloop, k);
+	CALI_MARK_BEGIN("Copy");
+#endif
+
     // Execute Copy
     t1 = std::chrono::high_resolution_clock::now();
     stream->copy();
     t2 = std::chrono::high_resolution_clock::now();
     timings[0].push_back(std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count());
+
+#ifdef STREAM_ENABLE_CALIPER
+	CALI_MARK_END("Copy");
+	CALI_MARK_BEGIN("Scale");
+#endif
 
     // Execute Mul
     t1 = std::chrono::high_resolution_clock::now();
@@ -126,11 +157,21 @@ std::vector<std::vector<double>> run_all(Stream<T> *stream, T& sum)
     t2 = std::chrono::high_resolution_clock::now();
     timings[1].push_back(std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count());
 
+#ifdef STREAM_ENABLE_CALIPER
+	CALI_MARK_END("Scale");
+	CALI_MARK_BEGIN("Add");
+#endif
+
     // Execute Add
     t1 = std::chrono::high_resolution_clock::now();
     stream->add();
     t2 = std::chrono::high_resolution_clock::now();
     timings[2].push_back(std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count());
+
+#ifdef STREAM_ENABLE_CALIPER
+	CALI_MARK_END("Add");
+	CALI_MARK_BEGIN("Triad");
+#endif
 
     // Execute Triad
     t1 = std::chrono::high_resolution_clock::now();
@@ -138,13 +179,25 @@ std::vector<std::vector<double>> run_all(Stream<T> *stream, T& sum)
     t2 = std::chrono::high_resolution_clock::now();
     timings[3].push_back(std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count());
 
+#ifdef STREAM_ENABLE_CALIPER
+	CALI_MARK_END("Triad");
+	CALI_MARK_BEGIN("Dot");
+#endif
+
     // Execute Dot
     t1 = std::chrono::high_resolution_clock::now();
     sum = stream->dot();
     t2 = std::chrono::high_resolution_clock::now();
     timings[4].push_back(std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count());
+#ifdef STREAM_ENABLE_CALIPER
+	CALI_MARK_END("Dot");
+	CALI_MARK_ITERATION_END(mainloop);
+#endif
 
   }
+#ifdef STREAM_ENABLE_CALIPER
+	CALI_MARK_LOOP_END(mainloop);
+#endif
 
   // Compiler should use a move
   return timings;
@@ -432,6 +485,10 @@ void run()
       sizes = {4 * sizeof(T) * ARRAY_SIZE };
     }
 
+#ifdef ENABLE_CALIPER
+	CALI_MARK_LOOP_BEGIN(mainloop, "mainloop");
+#endif
+
     for (int i = 0; i < timings.size(); ++i)
     {
       // Get min/max; ignore the first result
@@ -519,7 +576,6 @@ void check_solution(const unsigned int ntimes, std::vector<T>& a, std::vector<T>
   T goldSum{};
 
   const T scalar = startScalar;
-
   for (unsigned int i = 0; i < ntimes; i++)
   {
     // Do STREAM!
