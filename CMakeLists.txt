@@ -83,11 +83,6 @@ set(FETCH_TBB_VERSION "v2021.10.0" CACHE STRING "Specify version of oneTBB to us
 
 option(ENABLE_CALIPER "Enable Caliper/Adiak support" FALSE)
 
-if (ENABLE_CALIPER)
-    find_package(caliper REQUIRED)
-    find_package(adiak REQUIRED)
-    target_link_libraries(src/main.cpp PRIVATE caliper adiak::adiak)
-endif()
 
 if (FETCH_TBB)
     FetchContent_Declare(
@@ -239,6 +234,12 @@ add_executable(${EXE_NAME} ${IMPL_SOURCES} src/main.cpp)
 target_link_libraries(${EXE_NAME} PUBLIC ${LINK_LIBRARIES})
 target_compile_definitions(${EXE_NAME} PUBLIC ${IMPL_DEFINITIONS})
 target_include_directories(${EXE_NAME} PUBLIC ${IMPL_DIRECTORIES})
+
+if (ENABLE_CALIPER)
+    find_package(caliper REQUIRED)
+    find_package(adiak REQUIRED)
+    target_link_libraries(src/main.cpp PRIVATE caliper adiak::adiak)
+endif()
 
 if (CXX_EXTRA_LIBRARIES)
     target_link_libraries(${EXE_NAME} PUBLIC ${CXX_EXTRA_LIBRARIES})
