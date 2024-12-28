@@ -238,7 +238,7 @@ target_include_directories(${EXE_NAME} PUBLIC ${IMPL_DIRECTORIES})
 if (ENABLE_CALIPER)
     find_package(caliper REQUIRED)
     find_package(adiak REQUIRED)
-    target_link_libraries(${EXE_NAME} PRIVATE caliper adiak::adiak)
+    target_link_libraries(${EXE_NAME} PUBLIC caliper adiak::adiak)
 endif()
 
 if (CXX_EXTRA_LIBRARIES)
