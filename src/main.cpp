@@ -197,6 +197,8 @@ std::vector<std::vector<double>> run_all(Stream<T> *stream, T& sum)
   }
 #ifdef ENABLE_CALIPER
 	CALI_MARK_LOOP_END(mainloop);
+    CALI_MARK_FUNCTION_END;
+
 #endif
 
   // Compiler should use a move
