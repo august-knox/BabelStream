@@ -87,7 +87,7 @@ void parseArguments(int argc, char *argv[]);
 int main(int argc, char *argv[])
 {
 
-  #ifdef STREAM_ENABLE_CALIPER
+  #ifdef ENABLE_CALIPER
 	cali_config_set("CALI_CALIPER_ATTRIBUTE_DEFAULT_SCOPE", "process");
 
 	adiak_init(NULL);
@@ -128,14 +128,14 @@ std::vector<std::vector<double>> run_all(Stream<T> *stream, T& sum)
 
   // Declare timers
   std::chrono::high_resolution_clock::time_point t1, t2;
-#ifdef STREAM_ENABLE_CALIPER
+#ifdef ENABLE_CALIPER
 	CALI_MARK_LOOP_BEGIN(mainloop, "mainloop");
 #endif
 
   // Main loop
   for (unsigned int k = 0; k < num_times; k++)
   {
-#ifdef STREAM_ENABLE_CALIPER
+#ifdef ENABLE_CALIPER
 	CALI_MARK_ITERATION_BEGIN(mainloop, k);
 	CALI_MARK_BEGIN("Copy");
 #endif
@@ -146,7 +146,7 @@ std::vector<std::vector<double>> run_all(Stream<T> *stream, T& sum)
     t2 = std::chrono::high_resolution_clock::now();
     timings[0].push_back(std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count());
 
-#ifdef STREAM_ENABLE_CALIPER
+#ifdef ENABLE_CALIPER
 	CALI_MARK_END("Copy");
 	CALI_MARK_BEGIN("Scale");
 #endif
@@ -157,7 +157,7 @@ std::vector<std::vector<double>> run_all(Stream<T> *stream, T& sum)
     t2 = std::chrono::high_resolution_clock::now();
     timings[1].push_back(std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count());
 
-#ifdef STREAM_ENABLE_CALIPER
+#ifdef ENABLE_CALIPER
 	CALI_MARK_END("Scale");
 	CALI_MARK_BEGIN("Add");
 #endif
@@ -168,7 +168,7 @@ std::vector<std::vector<double>> run_all(Stream<T> *stream, T& sum)
     t2 = std::chrono::high_resolution_clock::now();
     timings[2].push_back(std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count());
 
-#ifdef STREAM_ENABLE_CALIPER
+#ifdef ENABLE_CALIPER
 	CALI_MARK_END("Add");
 	CALI_MARK_BEGIN("Triad");
 #endif
@@ -179,7 +179,7 @@ std::vector<std::vector<double>> run_all(Stream<T> *stream, T& sum)
     t2 = std::chrono::high_resolution_clock::now();
     timings[3].push_back(std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count());
 
-#ifdef STREAM_ENABLE_CALIPER
+#ifdef ENABLE_CALIPER
 	CALI_MARK_END("Triad");
 	CALI_MARK_BEGIN("Dot");
 #endif
@@ -189,13 +189,13 @@ std::vector<std::vector<double>> run_all(Stream<T> *stream, T& sum)
     sum = stream->dot();
     t2 = std::chrono::high_resolution_clock::now();
     timings[4].push_back(std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count());
-#ifdef STREAM_ENABLE_CALIPER
+#ifdef ENABLE_CALIPER
 	CALI_MARK_END("Dot");
 	CALI_MARK_ITERATION_END(mainloop);
 #endif
 
   }
-#ifdef STREAM_ENABLE_CALIPER
+#ifdef ENABLE_CALIPER
 	CALI_MARK_LOOP_END(mainloop);
 #endif
 
