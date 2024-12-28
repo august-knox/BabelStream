@@ -86,7 +86,7 @@ option(ENABLE_CALIPER "Enable Caliper/Adiak support" FALSE)
 if (ENABLE_CALIPER)
     find_package(caliper REQUIRED)
     find_package(adiak REQUIRED)
-    target_link_libraries(main.cpp PRIVATE caliper adiak::adiak)
+    target_link_libraries(src/main.cpp PRIVATE caliper adiak::adiak)
 endif()
 
 if (FETCH_TBB)
