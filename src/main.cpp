@@ -97,7 +97,10 @@ int main(int argc, char *argv[])
       std::cerr << "caliper config error: " << calimgr.error_msg() << std::endl;
 
    calimgr.start();
-   setupCaliper();
+
+   cali_config_preset("CALI_LOG_VERBOSITY", "2");
+   cali_config_preset("CALI_CALIPER_ATTRIBUTE_DEFAULT_SCOPE", "process");
+
    adiak::init(nullptr);
    adiak::collect_all();
 
@@ -641,15 +644,6 @@ void check_solution(const unsigned int ntimes, std::vector<T>& a, std::vector<T>
 
 }
 
-void setupCaliper()
-{
-#ifdef ENABLE_CALIPER
-
-   cali_config_preset("CALI_LOG_VERBOSITY", "2");
-   cali_config_preset("CALI_CALIPER_ATTRIBUTE_DEFAULT_SCOPE", "process");
-
-#endif
-}
 
 
 int parseUInt(const char *str, unsigned int *output)
