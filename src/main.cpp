@@ -112,7 +112,7 @@ int main(int argc, char *argv[])
 	adiak::value("num_times", num_times);
 	adiak::value("elements", ARRAY_SIZE);
 
-	CALI_CXX_MARK_FUNCTION_BEGIN;
+	CALI_MARK_FUNCTION_BEGIN;
 #endif  
 
   parseArguments(argc, argv);
@@ -129,7 +129,10 @@ int main(int argc, char *argv[])
     run<float>();
   else
     run<double>(); 
-
+#ifdef ENABLE_CALIEPR
+    adiak::fini();
+    calimgr.flush();
+#endif
 }
 
 
@@ -151,7 +154,7 @@ std::vector<std::vector<double>> run_all(Stream<T> *stream, T& sum)
   for (unsigned int k = 0; k < num_times; k++)
   {
 #ifdef ENABLE_CALIPER
-	CALI_CXX_MARK_ITERATION_BEGIN(mainloop, k);
+	CALI_CXX_MARK_LOOP_ITERATION(mainloop, k);
 	CALI_MARK_BEGIN("Copy");
 #endif
 
@@ -213,8 +216,6 @@ std::vector<std::vector<double>> run_all(Stream<T> *stream, T& sum)
 #ifdef ENABLE_CALIPER
 	CALI_CXX_MARK_LOOP_END(mainloop);
     CALI_MARK_FUNCTION_END;
-    adiak::fini();
-    calimgr.flush();
 #endif
 
   // Compiler should use a move
