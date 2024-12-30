@@ -88,7 +88,7 @@ void parseArguments(int argc, char *argv[]);
 
 int main(int argc, char *argv[])
 {
-
+cout << "print before enable";
 #ifdef ENABLE_CALIPER
     cout << "caliper enabled";
   	cali::ConfigManager calimgr;
