@@ -81,7 +81,7 @@ option(FETCH_TBB "Fetch (download) the oneTBB library for *supported* models. Th
                   FetchContent feature. Specify version by setting FETCH_TBB_VERSION" OFF)
 set(FETCH_TBB_VERSION "v2021.10.0" CACHE STRING "Specify version of oneTBB to use if FETCH_TBB is ON")
 
-option(ENABLE_CALIPER "Enable Caliper/Adiak support" OFF)
+option(ENABLE_CALIPER "Enable Caliper/Adiak support" FALSE)
 
 
 if (FETCH_TBB)

@@ -90,6 +90,7 @@ int main(int argc, char *argv[])
 {
 
 #ifdef ENABLE_CALIPER
+    cout << "caliper enabled";
   	cali::ConfigManager calimgr;
 
      if (calimgr.error())
