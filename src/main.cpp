@@ -55,7 +55,8 @@
 
 #ifdef ENABLE_CALIPER
 #include <caliper/cali.h>
-#include <adiak.h>
+#include <caliper/cali-manager.h>
+#include <adiak.hpp>
 #endif
 
 // Default size of 2^25
@@ -88,16 +89,28 @@ int main(int argc, char *argv[])
 {
 
   #ifdef ENABLE_CALIPER
+  	cali::ConfigManager calimgr(params.simulationParams.caliperConfig.c_str());
+
+     if (calimgr.error())
+      std::cerr << "caliper config error: " << calimgr.error_msg() << std::endl;
+
+   calimgr.start();
+   setupCaliper();
+   adiak::init(nullptr);
+   //adiak::date();
+   adiak::collect_all();
+
+
+
 	cali_config_set("CALI_CALIPER_ATTRIBUTE_DEFAULT_SCOPE", "process");
 
-	adiak_init(NULL);
-	adiak_collect_all();
+	adiak::value("x-size of simulation", params.simulationParams.lx);
 
-	adiak_namevalue("BABELSTREAM version", adiak_general, NULL, "%s", "4.0");
-	adiak_namevalue("num_times", adiak_general, NULL, "%d", num_times);
-	adiak_namevalue("elements", adiak_general, NULL, "%llu", ARRAY_SIZE);
+	adiak::value("BABELSTREAM version", "4.0");
+	adiak::value("num_times", num_times);
+	adiak::value("elements", ARRAY_SIZE);
 
-	CALI_MARK_FUNCTION_BEGIN;
+	CALI_CXX_MARK_FUNCTION_BEGIN;
 #endif  
 
   parseArguments(argc, argv);
@@ -129,15 +142,15 @@ std::vector<std::vector<double>> run_all(Stream<T> *stream, T& sum)
   // Declare timers
   std::chrono::high_resolution_clock::time_point t1, t2;
 #ifdef ENABLE_CALIPER
-	CALI_MARK_LOOP_BEGIN(mainloop, "mainloop");
+	CALI_CXX_MARK_LOOP_BEGIN(mainloop, "mainloop");
 #endif
 
   // Main loop
   for (unsigned int k = 0; k < num_times; k++)
   {
 #ifdef ENABLE_CALIPER
-	CALI_MARK_ITERATION_BEGIN(mainloop, k);
-	CALI_MARK_BEGIN("Copy");
+	CALI_CXX_MARK_ITERATION_BEGIN(mainloop, k);
+	CALI_CXX_MARK_BEGIN("Copy");
 #endif
 
     // Execute Copy
@@ -147,8 +160,8 @@ std::vector<std::vector<double>> run_all(Stream<T> *stream, T& sum)
     timings[0].push_back(std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count());
 
 #ifdef ENABLE_CALIPER
-	CALI_MARK_END("Copy");
-	CALI_MARK_BEGIN("Scale");
+	CALI_CXX_MARK_END("Copy");
+	CALI_CXX_MARK_BEGIN("Scale");
 #endif
 
     // Execute Mul
@@ -158,8 +171,8 @@ std::vector<std::vector<double>> run_all(Stream<T> *stream, T& sum)
     timings[1].push_back(std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count());
 
 #ifdef ENABLE_CALIPER
-	CALI_MARK_END("Scale");
-	CALI_MARK_BEGIN("Add");
+	CALI_CXX_MARK_END("Scale");
+	CALI_CXX_MARK_BEGIN("Add");
 #endif
 
     // Execute Add
@@ -169,8 +182,8 @@ std::vector<std::vector<double>> run_all(Stream<T> *stream, T& sum)
     timings[2].push_back(std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count());
 
 #ifdef ENABLE_CALIPER
-	CALI_MARK_END("Add");
-	CALI_MARK_BEGIN("Triad");
+	CALI_CXX_MARK_END("Add");
+	CALI_CXX_MARK_BEGIN("Triad");
 #endif
 
     // Execute Triad
@@ -180,8 +193,8 @@ std::vector<std::vector<double>> run_all(Stream<T> *stream, T& sum)
     timings[3].push_back(std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count());
 
 #ifdef ENABLE_CALIPER
-	CALI_MARK_END("Triad");
-	CALI_MARK_BEGIN("Dot");
+	CALI_CXX_MARK_END("Triad");
+	CALI_CXX_MARK_BEGIN("Dot");
 #endif
 
     // Execute Dot
@@ -190,15 +203,16 @@ std::vector<std::vector<double>> run_all(Stream<T> *stream, T& sum)
     t2 = std::chrono::high_resolution_clock::now();
     timings[4].push_back(std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count());
 #ifdef ENABLE_CALIPER
-	CALI_MARK_END("Dot");
-	CALI_MARK_ITERATION_END(mainloop);
+	CALI_CXX_MARK_END("Dot");
+	CALI_CXX_MARK_ITERATION_END(mainloop);
 #endif
 
   }
 #ifdef ENABLE_CALIPER
-	CALI_MARK_LOOP_END(mainloop);
-    CALI_MARK_FUNCTION_END;
-
+	CALI_CXX_MARK_LOOP_END(mainloop);
+    CALI_CXX_MARK_FUNCTION_END;
+    adiak::fini();
+    calimgr.flush();
 #endif
 
   // Compiler should use a move
