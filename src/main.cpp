@@ -647,6 +647,20 @@ void check_solution(const unsigned int ntimes, std::vector<T>& a, std::vector<T>
 
 }
 
+void setupCaliper()
+{
+#ifdef USE_CALIPER
+#ifdef HAVE_MPI
+   cali_mpi_init();
+#endif
+
+   cali_config_preset("CALI_LOG_VERBOSITY", "0");
+   cali_config_preset("CALI_CALIPER_ATTRIBUTE_DEFAULT_SCOPE", "process");
+
+#endif
+}
+
+
 int parseUInt(const char *str, unsigned int *output)
 {
   char *next;
