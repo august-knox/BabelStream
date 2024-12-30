@@ -209,7 +209,6 @@ std::vector<std::vector<double>> run_all(Stream<T> *stream, T& sum)
     timings[4].push_back(std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count());
 #ifdef ENABLE_CALIPER
 	CALI_MARK_END("Dot");
-	CALI_CXX_MARK_ITERATION_END(mainloop);
 #endif
 
   }
