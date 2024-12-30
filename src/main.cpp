@@ -90,7 +90,7 @@ int main(int argc, char *argv[])
 {
 
 #ifdef ENABLE_CALIPER
-  	cali::ConfigManager calimgr(params.simulationParams.caliperConfig.c_str());
+  	cali::ConfigManager calimgr;
 
      if (calimgr.error())
       std::cerr << "caliper config error: " << calimgr.error_msg() << std::endl;
@@ -151,7 +151,7 @@ std::vector<std::vector<double>> run_all(Stream<T> *stream, T& sum)
   {
 #ifdef ENABLE_CALIPER
 	CALI_CXX_MARK_ITERATION_BEGIN(mainloop, k);
-	CALI_CXX_MARK_BEGIN("Copy");
+	CALI_MARK_BEGIN("Copy");
 #endif
 
     // Execute Copy
@@ -161,8 +161,8 @@ std::vector<std::vector<double>> run_all(Stream<T> *stream, T& sum)
     timings[0].push_back(std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count());
 
 #ifdef ENABLE_CALIPER
-	CALI_CXX_MARK_END("Copy");
-	CALI_CXX_MARK_BEGIN("Scale");
+	CALI_MARK_END("Copy");
+	CALI_MARK_BEGIN("Scale");
 #endif
 
     // Execute Mul
@@ -172,8 +172,8 @@ std::vector<std::vector<double>> run_all(Stream<T> *stream, T& sum)
     timings[1].push_back(std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count());
 
 #ifdef ENABLE_CALIPER
-	CALI_CXX_MARK_END("Scale");
-	CALI_CXX_MARK_BEGIN("Add");
+	CALI_MARK_END("Scale");
+	CALI_MARK_BEGIN("Add");
 #endif
 
     // Execute Add
@@ -183,8 +183,8 @@ std::vector<std::vector<double>> run_all(Stream<T> *stream, T& sum)
     timings[2].push_back(std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count());
 
 #ifdef ENABLE_CALIPER
-	CALI_CXX_MARK_END("Add");
-	CALI_CXX_MARK_BEGIN("Triad");
+	CALI_MARK_END("Add");
+	CALI_MARK_BEGIN("Triad");
 #endif
 
     // Execute Triad
@@ -194,8 +194,8 @@ std::vector<std::vector<double>> run_all(Stream<T> *stream, T& sum)
     timings[3].push_back(std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count());
 
 #ifdef ENABLE_CALIPER
-	CALI_CXX_MARK_END("Triad");
-	CALI_CXX_MARK_BEGIN("Dot");
+	CALI_MARK_END("Triad");
+	CALI_MARK_BEGIN("Dot");
 #endif
 
     // Execute Dot
@@ -204,14 +204,14 @@ std::vector<std::vector<double>> run_all(Stream<T> *stream, T& sum)
     t2 = std::chrono::high_resolution_clock::now();
     timings[4].push_back(std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count());
 #ifdef ENABLE_CALIPER
-	CALI_CXX_MARK_END("Dot");
+	CALI_MARK_END("Dot");
 	CALI_CXX_MARK_ITERATION_END(mainloop);
 #endif
 
   }
 #ifdef ENABLE_CALIPER
 	CALI_CXX_MARK_LOOP_END(mainloop);
-    CALI_CXX_MARK_FUNCTION_END;
+    CALI_MARK_FUNCTION_END;
     adiak::fini();
     calimgr.flush();
 #endif
@@ -503,7 +503,7 @@ void run()
     }
 
 #ifdef ENABLE_CALIPER
-	CALI_MARK_LOOP_BEGIN(mainloop, "mainloop");
+	CALI_CXX_MARK_LOOP_BEGIN(mainloop, "mainloop");
 #endif
 
     for (int i = 0; i < timings.size(); ++i)
@@ -650,7 +650,7 @@ void check_solution(const unsigned int ntimes, std::vector<T>& a, std::vector<T>
 void setupCaliper()
 {
 #ifdef ENABLE_CALIPER
-   cali_init();
+//cali_init();
 
 
    cali_config_preset("CALI_LOG_VERBOSITY", "0");
