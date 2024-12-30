@@ -98,7 +98,6 @@ int main(int argc, char *argv[])
    calimgr.start();
    setupCaliper();
    adiak::init(nullptr);
-   //adiak::date();
    adiak::collect_all();
 
 
