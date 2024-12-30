@@ -649,10 +649,9 @@ void check_solution(const unsigned int ntimes, std::vector<T>& a, std::vector<T>
 
 void setupCaliper()
 {
-#ifdef USE_CALIPER
-#ifdef HAVE_MPI
-   cali_mpi_init();
-#endif
+#ifdef ENABLE_CALIPER
+   cali_init();
+
 
    cali_config_preset("CALI_LOG_VERBOSITY", "0");
    cali_config_preset("CALI_CALIPER_ATTRIBUTE_DEFAULT_SCOPE", "process");
