@@ -645,8 +645,7 @@ void setupCaliper()
 {
 #ifdef ENABLE_CALIPER
 
-
-   cali_config_preset("CALI_LOG_VERBOSITY", "0");
+   cali_config_preset("CALI_LOG_VERBOSITY", "2");
    cali_config_preset("CALI_CALIPER_ATTRIBUTE_DEFAULT_SCOPE", "process");
 
 #endif
