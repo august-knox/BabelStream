@@ -239,7 +239,7 @@ if (ENABLE_CALIPER)
     find_package(caliper REQUIRED)
     find_package(adiak REQUIRED)
     set(USE_CALIPER TRUE)
-    target_link_libraries(${EXE_NAME} PUBLIC caliper adiak)
+    target_link_libraries(${EXE_NAME} PUBLIC caliper adiak::adiak)
 endif()
 
 if (CXX_EXTRA_LIBRARIES)
