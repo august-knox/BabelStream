@@ -55,6 +55,7 @@
 
 #ifdef ENABLE_CALIPER
 #include <caliper/cali.h>
+#include <caliper/cali-mpi.h>
 #include <caliper/cali-manager.h>
 #include <adiak.hpp>
 #endif
@@ -88,7 +89,7 @@ void parseArguments(int argc, char *argv[]);
 int main(int argc, char *argv[])
 {
 
-  #ifdef ENABLE_CALIPER
+#ifdef ENABLE_CALIPER
   	cali::ConfigManager calimgr(params.simulationParams.caliperConfig.c_str());
 
      if (calimgr.error())
