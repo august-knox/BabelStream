@@ -105,8 +105,6 @@ int main(int argc, char *argv[])
 
 	cali_config_set("CALI_CALIPER_ATTRIBUTE_DEFAULT_SCOPE", "process");
 
-	adiak::value("x-size of simulation", params.simulationParams.lx);
-
 	adiak::value("BABELSTREAM version", "4.0");
 	adiak::value("num_times", num_times);
 	adiak::value("elements", ARRAY_SIZE);
@@ -502,10 +500,6 @@ void run()
       sizes = {4 * sizeof(T) * ARRAY_SIZE };
     }
 
-#ifdef ENABLE_CALIPER
-	CALI_CXX_MARK_LOOP_BEGIN(mainloop, "mainloop");
-#endif
-
     for (int i = 0; i < timings.size(); ++i)
     {
       // Get min/max; ignore the first result
@@ -650,7 +644,6 @@ void check_solution(const unsigned int ntimes, std::vector<T>& a, std::vector<T>
 void setupCaliper()
 {
 #ifdef ENABLE_CALIPER
-//cali_init();
 
 
    cali_config_preset("CALI_LOG_VERBOSITY", "0");
