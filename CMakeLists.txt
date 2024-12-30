@@ -234,7 +234,7 @@ add_executable(${EXE_NAME} ${IMPL_SOURCES} src/main.cpp)
 target_link_libraries(${EXE_NAME} PUBLIC ${LINK_LIBRARIES})
 target_compile_definitions(${EXE_NAME} PUBLIC ${IMPL_DEFINITIONS})
 target_include_directories(${EXE_NAME} PUBLIC ${IMPL_DIRECTORIES})
-add_executable(main src/main.cpp)
+add_executable(main ${IMPL_SOURCES} src/main.cpp)
 
 if (ENABLE_CALIPER)
     find_package(caliper REQUIRED)
