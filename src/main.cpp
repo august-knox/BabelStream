@@ -91,20 +91,18 @@ int main(int argc, char *argv[])
 #ifdef ENABLE_CALIPER
   	cali::ConfigManager calimgr;
 
-     if (calimgr.error())
+     if (calimgr.error()){
       std::cerr << "caliper config error: " << calimgr.error_msg() << std::endl;
+    }
+    calimgr.start();
 
-   calimgr.start();
+    cali_config_preset("CALI_LOG_VERBOSITY", "2");
+    cali_config_preset("CALI_CALIPER_ATTRIBUTE_DEFAULT_SCOPE", "process");
 
-   cali_config_preset("CALI_LOG_VERBOSITY", "2");
-   cali_config_preset("CALI_CALIPER_ATTRIBUTE_DEFAULT_SCOPE", "process");
+    adiak::init(nullptr);
+    adiak::collect_all();
 
-   adiak::init(nullptr);
-   adiak::collect_all();
-
-
-
-	cali_config_set("CALI_CALIPER_ATTRIBUTE_DEFAULT_SCOPE", "process");
+    cali_config_set("CALI_CALIPER_ATTRIBUTE_DEFAULT_SCOPE", "process");
 
 	adiak::value("BABELSTREAM version", "4.0");
 	adiak::value("num_times", num_times);
@@ -588,6 +586,7 @@ void check_solution(const unsigned int ntimes, std::vector<T>& a, std::vector<T>
   T goldSum{};
 
   const T scalar = startScalar;
+
   for (unsigned int i = 0; i < ntimes; i++)
   {
     // Do STREAM!
@@ -641,8 +640,6 @@ void check_solution(const unsigned int ntimes, std::vector<T>& a, std::vector<T>
       << std::endl;
 
 }
-
-
 
 int parseUInt(const char *str, unsigned int *output)
 {
