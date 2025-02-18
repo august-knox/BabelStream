@@ -9,10 +9,10 @@
 
 template <class T>
 KokkosStream<T>::KokkosStream(
-        const int ARRAY_SIZE, const int device_index)
+        const intptr_t ARRAY_SIZE, const int device_index)
     : array_size(ARRAY_SIZE)
 {
-  Kokkos::initialize();
+  Kokkos::initialize(Kokkos::InitializationSettings().set_device_id(device_index));
 
   d_a = new Kokkos::View<T*>(Kokkos::ViewAllocateWithoutInitializing("d_a"), ARRAY_SIZE);
   d_b = new Kokkos::View<T*>(Kokkos::ViewAllocateWithoutInitializing("d_b"), ARRAY_SIZE);
@@ -53,7 +53,7 @@ void KokkosStream<T>::read_arrays(
   deep_copy(*hm_a, *d_a);
   deep_copy(*hm_b, *d_b);
   deep_copy(*hm_c, *d_c);
-  for(int ii = 0; ii < array_size; ++ii)
+  for(intptr_t ii = 0; ii < array_size; ++ii)
   {
     a[ii] = (*hm_a)(ii);
     b[ii] = (*hm_b)(ii);
