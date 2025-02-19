@@ -128,11 +128,11 @@ int main(int argc, char *argv[])
   else
     run<double>(); 
 
-  return EXIT_SUCCESS;
 #ifdef ENABLE_CALIPER
     adiak::fini();
     calimgr.flush();
 #endif
+  return EXIT_SUCCESS;
 }
 
 // Returns duration of executing function f:
@@ -156,18 +156,54 @@ std::vector<std::vector<double>> run_all(std::unique_ptr<Stream<T>>& stream, T& 
   auto run = [&](Benchmark const& b)
   {
     switch(b.id) {
+    case BenchId::Copy:    
 #ifdef ENABLE_CALIPER
     CALI_MARK_BEGIN("Copy");
 #endif
-    case BenchId::Copy:    return stream->copy();
+        return stream->copy();
 #ifdef ENABLE_CALIPER
     CALI_MARK_END("Copy");
 #endif
-    case BenchId::Mul:     return stream->mul();
-    case BenchId::Add:     return stream->add();
-    case BenchId::Triad:   return stream->triad();
-    case BenchId::Dot:     sum = stream->dot(); return;
-    case BenchId::Nstream: return stream->nstream();
+    case BenchId::Mul:             
+#ifdef ENABLE_CALIPER
+    CALI_MARK_BEGIN("Mul");
+#endif
+        return stream->mul();
+#ifdef ENABLE_CALIPER
+    CALI_MARK_END("Mul");
+#endif
+    case BenchId::Add:     
+#ifdef ENABLE_CALIPER
+    CALI_MARK_BEGIN("Add");
+#endif        
+        return stream->add();
+#ifdef ENABLE_CALIPER
+    CALI_MARK_END("Add");
+#endif
+    case BenchId::Triad:   
+#ifdef ENABLE_CALIPER
+    CALI_MARK_BEGIN("Triad");
+#endif
+        return stream->triad();
+#ifdef ENABLE_CALIPER
+    CALI_MARK_END("Triad");
+#endif
+    case BenchId::Dot:     
+#ifdef ENABLE_CALIPER
+    CALI_MARK_BEGIN("Dot");
+#endif
+        sum = stream->dot(); return;
+#ifdef ENABLE_CALIPER
+    CALI_MARK_END("Dot");
+#endif
+    case BenchId::Nstream: 
+#ifdef ENABLE_CALIPER
+    CALI_MARK_BEGIN("Nstream");
+#endif
+        return stream->nstream();
+#ifdef ENABLE_CALIPER
+    CALI_MARK_END("Nstream");
+#endif
     default:
       std::cerr << "Unimplemented benchmark: " << b.label << std::endl;
       abort();
