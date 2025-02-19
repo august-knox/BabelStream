@@ -186,11 +186,11 @@ std::vector<std::vector<double>> run_all(std::unique_ptr<Stream<T>>& stream, T& 
 
 	if (!run_benchmark(bench[i])) continue;
 #ifdef ENABLE_CALIPER
-    CALI_MARK_BEGIN("classicIteration");
+    CALI_MARK_BEGIN(bench[i].label);
 #endif        
 	timings[i].push_back(dt(bench[i]));
 #ifdef ENABLE_CALIPER
-    CALI_MARK_END("classicIteration");
+    CALI_MARK_END(bench[i].label);
 #endif        
       }
     }
