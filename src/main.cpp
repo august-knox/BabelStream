@@ -170,7 +170,7 @@ std::vector<std::vector<double>> run_all(std::unique_ptr<Stream<T>>& stream, T& 
 #ifdef ENABLE_CALIPER
     CALI_MARK_BEGIN("Mul");
 #endif
-        mulResult = stream->mul();
+        auto mulResult = stream->mul();
 #ifdef ENABLE_CALIPER
     CALI_MARK_END("Mul");
 #endif
@@ -190,7 +190,7 @@ std::vector<std::vector<double>> run_all(std::unique_ptr<Stream<T>>& stream, T& 
 #ifdef ENABLE_CALIPER
     CALI_MARK_BEGIN("Triad");
 #endif
-        triadResult = stream->triad();
+        auto triadResult = stream->triad();
 #ifdef ENABLE_CALIPER
     CALI_MARK_END("Triad");
 #endif
