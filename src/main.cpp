@@ -314,7 +314,7 @@ void run()
   {
     fmt_csv_header();
     fmt_csv("Init", 1, ARRAY_SIZE, sizeof(T), initBWps, initElapsedS, initElapsedS, initElapsedS);
-    fmt_csv("Read", 1, ARRAY_SIZE, sizeof(T), rea/dBWps, readElapsedS, readElapsedS, readElapsedS);
+    fmt_csv("Read", 1, ARRAY_SIZE, sizeof(T), readBWps, readElapsedS, readElapsedS, readElapsedS);
   }
   else
   {
