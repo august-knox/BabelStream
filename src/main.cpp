@@ -160,41 +160,41 @@ std::vector<std::vector<double>> run_all(std::unique_ptr<Stream<T>>& stream, T& 
 #ifdef ENABLE_CALIPER
     CALI_MARK_BEGIN("Copy");
 #endif
-        auto result = stream->copy();
+        auto copyResult = stream->copy();
 #ifdef ENABLE_CALIPER
     CALI_MARK_END("Copy");
 #endif
-        return result;
+        return copyResult;
 
     case BenchId::Mul:             
 #ifdef ENABLE_CALIPER
     CALI_MARK_BEGIN("Mul");
 #endif
-        result = stream->mul();
+        mulResult = stream->mul();
 #ifdef ENABLE_CALIPER
     CALI_MARK_END("Mul");
 #endif
-        return result;
+        return mulResult;
 
     case BenchId::Add:     
 #ifdef ENABLE_CALIPER
     CALI_MARK_BEGIN("Add");
 #endif        
-        auto result = stream->add();
+        auto addResult = stream->add();
 #ifdef ENABLE_CALIPER
     CALI_MARK_END("Add");
 #endif
-        return result;
+        return addResult;
 
     case BenchId::Triad:   
 #ifdef ENABLE_CALIPER
     CALI_MARK_BEGIN("Triad");
 #endif
-        result = stream->triad();
+        triadResult = stream->triad();
 #ifdef ENABLE_CALIPER
     CALI_MARK_END("Triad");
 #endif
-        return result;    
+        return triadResult;    
 
     case BenchId::Dot:     
 #ifdef ENABLE_CALIPER
@@ -210,11 +210,11 @@ std::vector<std::vector<double>> run_all(std::unique_ptr<Stream<T>>& stream, T& 
 #ifdef ENABLE_CALIPER
     CALI_MARK_BEGIN("Nstream");
 #endif
-        auto result = stream->nstream();
+        auto nStreamResult = stream->nstream();
 #ifdef ENABLE_CALIPER
     CALI_MARK_END("Nstream");
 #endif
-        return result;
+        return nStreamResult;
     default:
       std::cerr << "Unimplemented benchmark: " << b.label << std::endl;
       abort();
