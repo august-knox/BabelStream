@@ -183,8 +183,15 @@ std::vector<std::vector<double>> run_all(std::unique_ptr<Stream<T>>& stream, T& 
   case BenchOrder::Classic: {
     for (size_t k = 0; k < num_times; k++) {
       for (size_t i = 0; i < num_benchmarks; ++i) {
+
 	if (!run_benchmark(bench[i])) continue;
+#ifdef ENABLE_CALIPER
+    CALI_MARK_BEGIN("classicIteration");
+#endif        
 	timings[i].push_back(dt(bench[i]));
+#ifdef ENABLE_CALIPER
+    CALI_MARK_END("classicIteration");
+#endif        
       }
     }
     break;
@@ -249,7 +256,7 @@ void run()
 		    double dt_min, double dt_max, double dt_avg) {
     std::cout
       << std::left << std::setw(12) << function
-      << std::left << std::setw(12) << std::setprecision(3) << bandwidth
+      << std::left [b].id< std::setw(12) << std::setprecision(3) << bandwidth
       << std::left << std::setw(12) << std::setprecision(5) << dt_min
       << std::left << std::setw(12) << std::setprecision(5) << dt_max
       << std::left << std::setw(12) << std::setprecision(5) << dt_avg
