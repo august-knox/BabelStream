@@ -292,11 +292,11 @@ void run()
 
   std::unique_ptr<Stream<T>> stream = make_stream<T>(ARRAY_SIZE, deviceIndex);
 #ifdef ENABLE_CALIPER
-    CALI_MARK_BEGIN(stream);
+    CALI_MARK_BEGIN("stream");
 #endif        
   auto initElapsedS = time([&] { stream->init_arrays(startA, startB, startC); });
 #ifdef ENABLE_CALIPER
-    CALI_MARK_END(stream);
+    CALI_MARK_END("stream");
 #endif        
   // Result of the Dot kernel, if used.
   T sum{};
@@ -314,7 +314,7 @@ void run()
   {
     fmt_csv_header();
     fmt_csv("Init", 1, ARRAY_SIZE, sizeof(T), initBWps, initElapsedS, initElapsedS, initElapsedS);
-    fmt_csv("Read", 1, ARRAY_SIZE, sizeof(T), readBWps, readElapsedS, readElapsedS, readElapsedS);
+    fmt_csv("Read", 1, ARRAY_SIZE, sizeof(T), rea/dBWps, readElapsedS, readElapsedS, readElapsedS);
   }
   else
   {
