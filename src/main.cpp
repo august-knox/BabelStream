@@ -290,13 +290,13 @@ void run()
     std::cout.precision(ss);
   }
 
-#ifdef ENABLE_CALIPER
-    CALI_MARK_BEGIN(bench[i].label);
-#endif        
   std::unique_ptr<Stream<T>> stream = make_stream<T>(ARRAY_SIZE, deviceIndex);
+#ifdef ENABLE_CALIPER
+    CALI_MARK_BEGIN(stream);
+#endif        
   auto initElapsedS = time([&] { stream->init_arrays(startA, startB, startC); });
 #ifdef ENABLE_CALIPER
-    CALI_MARK_END(bench[i].label);
+    CALI_MARK_END(stream);
 #endif        
   // Result of the Dot kernel, if used.
   T sum{};
