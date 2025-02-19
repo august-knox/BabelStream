@@ -154,83 +154,14 @@ std::vector<std::vector<double>> run_all(std::unique_ptr<Stream<T>>& stream, T& 
 
   // Run a particular benchmark
   auto run = [&](Benchmark const& b)
-
-  decltype(stream->copy()) result;
-
   {
     switch(b.id) {
-    case BenchId::Copy: {    
-#ifdef ENABLE_CALIPER
-    CALI_MARK_BEGIN("Copy");
-#endif
-        auto result = stream->copy();
-#ifdef ENABLE_CALIPER
-    CALI_MARK_END("Copy");
-#endif
-        return result;
-        break;
-    }
-
-    case BenchId::Mul: {           
-#ifdef ENABLE_CALIPER
-    CALI_MARK_BEGIN("Mul");
-#endif
-        auto result = stream->mul();
-#ifdef ENABLE_CALIPER
-    CALI_MARK_END("Mul");
-#endif
-        return result;
-        break;
-    }
-
-    case BenchId::Add: {    
-#ifdef ENABLE_CALIPER
-    CALI_MARK_BEGIN("Add");
-#endif        
-        auto result = stream->add();
-#ifdef ENABLE_CALIPER
-    CALI_MARK_END("Add");
-#endif
-        return result;
-        break;
-    }
-
-    case BenchId::Triad: {  
-#ifdef ENABLE_CALIPER
-    CALI_MARK_BEGIN("Triad");
-#endif
-        auto result = stream->triad();
-#ifdef ENABLE_CALIPER
-    CALI_MARK_END("Triad");
-#endif
-        return result;  
-        break;
-    }  
-
-    case BenchId::Dot: {
-#ifdef ENABLE_CALIPER
-    CALI_MARK_BEGIN("Dot");
-#endif
-        auto sum = stream->dot();       
-#ifdef ENABLE_CALIPER
-    CALI_MARK_END("Dot");
-#endif
-        return sum;
-        break;
-    }
-
-    case BenchId::Nstream: {
-#ifdef ENABLE_CALIPER
-    CALI_MARK_BEGIN("Nstream");
-#endif
-        auto result = stream->nstream();
-#ifdef ENABLE_CALIPER
-    CALI_MARK_END("Nstream");
-#endif
-        return result;
-        break;
-    }
-
+    case BenchId::Copy:    return stream->copy();
+    case BenchId::Mul:     return stream->mul();
+    case BenchId::Add:     return stream->add();
+    case BenchId::Triad:   return stream->triad();
+    case BenchId::Dot:     sum = stream->dot(); return;
+    case BenchId::Nstream: return stream->nstream();     
     default:
       std::cerr << "Unimplemented benchmark: " << b.label << std::endl;
       abort();
@@ -339,6 +270,7 @@ void run()
     case BenchId::Classic: std::cout << " Classic kernels "; break;
     default:
       std::cout << "Running ";
+
       for (size_t i = 0; i < num_benchmarks; ++i) {
 	if (selection == bench[i].id) {
 	  std::cout << bench[i].label;
@@ -358,9 +290,14 @@ void run()
     std::cout.precision(ss);
   }
 
+#ifdef ENABLE_CALIPER
+    CALI_MARK_BEGIN(bench[i].label);
+#endif        
   std::unique_ptr<Stream<T>> stream = make_stream<T>(ARRAY_SIZE, deviceIndex);
   auto initElapsedS = time([&] { stream->init_arrays(startA, startB, startC); });
-
+#ifdef ENABLE_CALIPER
+    CALI_MARK_END(bench[i].label);
+#endif        
   // Result of the Dot kernel, if used.
   T sum{};
   std::vector<std::vector<double>> timings = run_all<T>(stream, sum);
