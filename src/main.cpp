@@ -256,7 +256,7 @@ void run()
 		    double dt_min, double dt_max, double dt_avg) {
     std::cout
       << std::left << std::setw(12) << function
-      << std::left [b].id< std::setw(12) << std::setprecision(3) << bandwidth
+      << std::left << std::setw(12) << std::setprecision(3) << bandwidth
       << std::left << std::setw(12) << std::setprecision(5) << dt_min
       << std::left << std::setw(12) << std::setprecision(5) << dt_max
       << std::left << std::setw(12) << std::setprecision(5) << dt_avg
