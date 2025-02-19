@@ -159,7 +159,7 @@ std::vector<std::vector<double>> run_all(std::unique_ptr<Stream<T>>& stream, T& 
 
   {
     switch(b.id) {
-    case BenchId::Copy:    
+    case BenchId::Copy: {    
 #ifdef ENABLE_CALIPER
     CALI_MARK_BEGIN("Copy");
 #endif
@@ -168,8 +168,10 @@ std::vector<std::vector<double>> run_all(std::unique_ptr<Stream<T>>& stream, T& 
     CALI_MARK_END("Copy");
 #endif
         return result;
+        break;
+    }
 
-    case BenchId::Mul:             
+    case BenchId::Mul: {           
 #ifdef ENABLE_CALIPER
     CALI_MARK_BEGIN("Mul");
 #endif
@@ -178,8 +180,10 @@ std::vector<std::vector<double>> run_all(std::unique_ptr<Stream<T>>& stream, T& 
     CALI_MARK_END("Mul");
 #endif
         return result;
+        break;
+    }
 
-    case BenchId::Add:     
+    case BenchId::Add: {    
 #ifdef ENABLE_CALIPER
     CALI_MARK_BEGIN("Add");
 #endif        
@@ -188,8 +192,10 @@ std::vector<std::vector<double>> run_all(std::unique_ptr<Stream<T>>& stream, T& 
     CALI_MARK_END("Add");
 #endif
         return result;
+        break;
+    }
 
-    case BenchId::Triad:   
+    case BenchId::Triad: {  
 #ifdef ENABLE_CALIPER
     CALI_MARK_BEGIN("Triad");
 #endif
@@ -197,9 +203,11 @@ std::vector<std::vector<double>> run_all(std::unique_ptr<Stream<T>>& stream, T& 
 #ifdef ENABLE_CALIPER
     CALI_MARK_END("Triad");
 #endif
-        return result;    
+        return result;  
+        break;
+    }  
 
-    case BenchId::Dot:     
+    case BenchId::Dot: {
 #ifdef ENABLE_CALIPER
     CALI_MARK_BEGIN("Dot");
 #endif
@@ -208,8 +216,10 @@ std::vector<std::vector<double>> run_all(std::unique_ptr<Stream<T>>& stream, T& 
     CALI_MARK_END("Dot");
 #endif
         return sum;
+        break;
+    }
 
-    case BenchId::Nstream: 
+    case BenchId::Nstream: {
 #ifdef ENABLE_CALIPER
     CALI_MARK_BEGIN("Nstream");
 #endif
@@ -218,6 +228,9 @@ std::vector<std::vector<double>> run_all(std::unique_ptr<Stream<T>>& stream, T& 
     CALI_MARK_END("Nstream");
 #endif
         return result;
+        break;
+    }
+
     default:
       std::cerr << "Unimplemented benchmark: " << b.label << std::endl;
       abort();
