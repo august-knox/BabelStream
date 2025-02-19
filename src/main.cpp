@@ -154,53 +154,56 @@ std::vector<std::vector<double>> run_all(std::unique_ptr<Stream<T>>& stream, T& 
 
   // Run a particular benchmark
   auto run = [&](Benchmark const& b)
+
+  decltype(stream->copy()) result;
+
   {
     switch(b.id) {
     case BenchId::Copy:    
 #ifdef ENABLE_CALIPER
     CALI_MARK_BEGIN("Copy");
 #endif
-        auto copyResult = stream->copy();
+        auto result = stream->copy();
 #ifdef ENABLE_CALIPER
     CALI_MARK_END("Copy");
 #endif
-        return copyResult;
+        return result;
 
     case BenchId::Mul:             
 #ifdef ENABLE_CALIPER
     CALI_MARK_BEGIN("Mul");
 #endif
-        auto mulResult = stream->mul();
+        auto result = stream->mul();
 #ifdef ENABLE_CALIPER
     CALI_MARK_END("Mul");
 #endif
-        return mulResult;
+        return result;
 
     case BenchId::Add:     
 #ifdef ENABLE_CALIPER
     CALI_MARK_BEGIN("Add");
 #endif        
-        auto addResult = stream->add();
+        auto result = stream->add();
 #ifdef ENABLE_CALIPER
     CALI_MARK_END("Add");
 #endif
-        return addResult;
+        return result;
 
     case BenchId::Triad:   
 #ifdef ENABLE_CALIPER
     CALI_MARK_BEGIN("Triad");
 #endif
-        auto triadResult = stream->triad();
+        auto result = stream->triad();
 #ifdef ENABLE_CALIPER
     CALI_MARK_END("Triad");
 #endif
-        return triadResult;    
+        return result;    
 
     case BenchId::Dot:     
 #ifdef ENABLE_CALIPER
     CALI_MARK_BEGIN("Dot");
 #endif
-        sum = stream->dot();       
+        auto sum = stream->dot();       
 #ifdef ENABLE_CALIPER
     CALI_MARK_END("Dot");
 #endif
@@ -210,11 +213,11 @@ std::vector<std::vector<double>> run_all(std::unique_ptr<Stream<T>>& stream, T& 
 #ifdef ENABLE_CALIPER
     CALI_MARK_BEGIN("Nstream");
 #endif
-        auto nStreamResult = stream->nstream();
+        auto result = stream->nstream();
 #ifdef ENABLE_CALIPER
     CALI_MARK_END("Nstream");
 #endif
-        return nStreamResult;
+        return result;
     default:
       std::cerr << "Unimplemented benchmark: " << b.label << std::endl;
       abort();
