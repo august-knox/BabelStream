@@ -299,11 +299,11 @@ void run()
 
   std::unique_ptr<Stream<T>> stream = make_stream<T>(ARRAY_SIZE, deviceIndex);
 #ifdef ENABLE_CALIPER
-    CALI_MARK_BEGIN("stream");
+    CALI_MARK_BEGIN("init_arrays");
 #endif        
   auto initElapsedS = time([&] { stream->init_arrays(startA, startB, startC); });
 #ifdef ENABLE_CALIPER
-    CALI_MARK_END("stream");
+    CALI_MARK_END("init_arrays");
 #endif        
   // Result of the Dot kernel, if used.
   T sum{};
