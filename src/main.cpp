@@ -161,7 +161,7 @@ std::vector<std::vector<double>> run_all(std::unique_ptr<Stream<T>>& stream, T& 
     case BenchId::Add:     return stream->add();
     case BenchId::Triad:   return stream->triad();
     case BenchId::Dot:     sum = stream->dot(); return;
-    case BenchId::Nstream: return stream->nstream(); 
+    case BenchId::Nstream: return stream->nstream();
     default:
       std::cerr << "Unimplemented benchmark: " << b.label << std::endl;
       abort();
@@ -302,7 +302,8 @@ void run()
   auto initElapsedS = time([&] { stream->init_arrays(startA, startB, startC); });
 #ifdef ENABLE_CALIPER
     CALI_MARK_END("init_arrays");
-#endif 
+#endif
+
   // Result of the Dot kernel, if used.
   T sum{};
   std::vector<std::vector<double>> timings = run_all<T>(stream, sum);
