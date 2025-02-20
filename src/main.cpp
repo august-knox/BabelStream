@@ -126,7 +126,7 @@ int main(int argc, char *argv[])
   if (use_float)
     run<float>();
   else
-    run<double>(); 
+    run<double>();
 
 #ifdef ENABLE_CALIPER
     adiak::fini();
@@ -161,7 +161,7 @@ std::vector<std::vector<double>> run_all(std::unique_ptr<Stream<T>>& stream, T& 
     case BenchId::Add:     return stream->add();
     case BenchId::Triad:   return stream->triad();
     case BenchId::Dot:     sum = stream->dot(); return;
-    case BenchId::Nstream: return stream->nstream();     
+    case BenchId::Nstream: return stream->nstream(); 
     default:
       std::cerr << "Unimplemented benchmark: " << b.label << std::endl;
       abort();
@@ -183,15 +183,14 @@ std::vector<std::vector<double>> run_all(std::unique_ptr<Stream<T>>& stream, T& 
   case BenchOrder::Classic: {
     for (size_t k = 0; k < num_times; k++) {
       for (size_t i = 0; i < num_benchmarks; ++i) {
-
 	if (!run_benchmark(bench[i])) continue;
 #ifdef ENABLE_CALIPER
     CALI_MARK_BEGIN(bench[i].label);
-#endif        
+#endif 
 	timings[i].push_back(dt(bench[i]));
 #ifdef ENABLE_CALIPER
     CALI_MARK_END(bench[i].label);
-#endif        
+#endif 
       }
     }
     break;
@@ -277,7 +276,6 @@ void run()
     case BenchId::Classic: std::cout << " Classic kernels "; break;
     default:
       std::cout << "Running ";
-
       for (size_t i = 0; i < num_benchmarks; ++i) {
 	if (selection == bench[i].id) {
 	  std::cout << bench[i].label;
@@ -300,11 +298,11 @@ void run()
   std::unique_ptr<Stream<T>> stream = make_stream<T>(ARRAY_SIZE, deviceIndex);
 #ifdef ENABLE_CALIPER
     CALI_MARK_BEGIN("init_arrays");
-#endif        
+#endif 
   auto initElapsedS = time([&] { stream->init_arrays(startA, startB, startC); });
 #ifdef ENABLE_CALIPER
     CALI_MARK_END("init_arrays");
-#endif        
+#endif 
   // Result of the Dot kernel, if used.
   T sum{};
   std::vector<std::vector<double>> timings = run_all<T>(stream, sum);
